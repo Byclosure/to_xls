@@ -1,5 +1,11 @@
 require 'test_helper'
 
+class User < ActiveRecord::Base
+  def is_old?
+    age > 40
+  end
+end
+
 class ToXlsTest < TestCaseClass
 
   def setup
@@ -13,7 +19,7 @@ class ToXlsTest < TestCaseClass
   end
   
   def test_with_no_options
-    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">id</Data></Cell><Cell><Data ss:Type=\"String\">name</Data></Cell><Cell><Data ss:Type=\"String\">age</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">1</Data></Cell><Cell><Data ss:Type=\"String\">Ary</Data></Cell><Cell><Data ss:Type=\"Number\">24</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">2</Data></Cell><Cell><Data ss:Type=\"String\">Nati</Data></Cell><Cell><Data ss:Type=\"Number\">21</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls )
+    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">id</Data></Cell><Cell><Data ss:Type=\"String\">Name</Data></Cell><Cell><Data ss:Type=\"String\">age</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">1</Data></Cell><Cell><Data ss:Type=\"String\">Ary</Data></Cell><Cell><Data ss:Type=\"Number\">24</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">2</Data></Cell><Cell><Data ss:Type=\"String\">Nati</Data></Cell><Cell><Data ss:Type=\"Number\">21</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls )
   end
   
   def test_with_no_headers
@@ -21,7 +27,7 @@ class ToXlsTest < TestCaseClass
   end
   
   def test_with_only
-    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">name</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Ary</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Nati</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:only => :name) )
+    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">Name</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Ary</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Nati</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:only => :name) )
   end
   
   def test_with_empty_only
@@ -29,7 +35,7 @@ class ToXlsTest < TestCaseClass
   end
   
   def test_with_only_and_wrong_column_names
-    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">name</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Ary</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Nati</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:only => [:name, :yoyo]) )
+    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">Name</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Ary</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Nati</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:only => [:name, :yoyo]) )
   end
   
   def test_with_except
@@ -37,16 +43,15 @@ class ToXlsTest < TestCaseClass
   end
   
   def test_with_except_and_only_should_listen_to_only
-    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">name</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Ary</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Nati</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:except => [:id, :name], :only => :name) )
+    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">Name</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Ary</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Nati</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:except => [:id, :name], :only => :name) )
   end
   
   def test_with_except
-    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">id</Data></Cell><Cell><Data ss:Type=\"String\">name</Data></Cell><Cell><Data ss:Type=\"String\">age</Data></Cell><Cell><Data ss:Type=\"String\">is_old?</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">1</Data></Cell><Cell><Data ss:Type=\"String\">Ary</Data></Cell><Cell><Data ss:Type=\"Number\">24</Data></Cell><Cell><Data ss:Type=\"String\">false</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">2</Data></Cell><Cell><Data ss:Type=\"String\">Nati</Data></Cell><Cell><Data ss:Type=\"Number\">21</Data></Cell><Cell><Data ss:Type=\"String\">false</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:methods => [:is_old?]) )
+    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">id</Data></Cell><Cell><Data ss:Type=\"String\">Name</Data></Cell><Cell><Data ss:Type=\"String\">age</Data></Cell><Cell><Data ss:Type=\"String\">is_old?</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">1</Data></Cell><Cell><Data ss:Type=\"String\">Ary</Data></Cell><Cell><Data ss:Type=\"Number\">24</Data></Cell><Cell><Data ss:Type=\"String\">false</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">2</Data></Cell><Cell><Data ss:Type=\"String\">Nati</Data></Cell><Cell><Data ss:Type=\"Number\">21</Data></Cell><Cell><Data ss:Type=\"String\">false</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:methods => [:is_old?]) )
   end
   
   def test_with_i18n
     I18n.locale = "pt-PT"
-    debugger
     assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">nome</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Ary</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Nati</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls)
   end
   

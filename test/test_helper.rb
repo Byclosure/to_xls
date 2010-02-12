@@ -4,7 +4,9 @@ RAILS_ROOT = plugin_test_dir
 
 require 'rubygems'
 require 'test/unit'
-
+require 'active_support'
+require 'multi_rails_init'
+require "test_help"
 require plugin_test_dir + '/../rails/init.rb'
 
 TestCaseClass = ActiveSupport::TestCase rescue Test::Unit::TestCase

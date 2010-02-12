@@ -9,11 +9,11 @@ class Array
       
       if options[:only]
         # the "& attributes" get rid of invalid columns
-        columns = options[:only].to_a & attributes
+        columns = Array(options[:only]) & attributes
       else
         columns = attributes - options[:except].to_a
       end
-    
+
       columns += options[:methods].to_a
     
       if columns.any?
