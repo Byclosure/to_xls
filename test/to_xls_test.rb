@@ -1,9 +1,6 @@
-require 'test/unit'
-require 'rubygems'
-require File.dirname(__FILE__) + '/../lib/to_xls'
-require File.dirname(__FILE__) + '/user_model'
+require 'test_helper'
 
-class ToXlsTest < Test::Unit::TestCase
+class ToXlsTest < TestCaseClass
 
   def setup
     @users = []
@@ -45,6 +42,12 @@ class ToXlsTest < Test::Unit::TestCase
   
   def test_with_except
     assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">id</Data></Cell><Cell><Data ss:Type=\"String\">name</Data></Cell><Cell><Data ss:Type=\"String\">age</Data></Cell><Cell><Data ss:Type=\"String\">is_old?</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">1</Data></Cell><Cell><Data ss:Type=\"String\">Ary</Data></Cell><Cell><Data ss:Type=\"Number\">24</Data></Cell><Cell><Data ss:Type=\"String\">false</Data></Cell></Row><Row><Cell><Data ss:Type=\"Number\">2</Data></Cell><Cell><Data ss:Type=\"String\">Nati</Data></Cell><Cell><Data ss:Type=\"Number\">21</Data></Cell><Cell><Data ss:Type=\"String\">false</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls(:methods => [:is_old?]) )
+  end
+  
+  def test_with_i18n
+    I18n.locale = "pt-PT"
+    debugger
+    assert_equal( "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Workbook xmlns:x=\"urn:schemas-microsoft-com:office:excel\" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:html=\"http://www.w3.org/TR/REC-html40\" xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><Worksheet ss:Name=\"Sheet1\"><Table><Row><Cell><Data ss:Type=\"String\">nome</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Ary</Data></Cell></Row><Row><Cell><Data ss:Type=\"String\">Nati</Data></Cell></Row></Table></Worksheet></Workbook>", @users.to_xls)
   end
   
 end

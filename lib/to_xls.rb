@@ -19,7 +19,7 @@ class Array
       if columns.any?
         unless options[:headers] == false
           output << "<Row>"
-          columns.each { |column| output << "<Cell><Data ss:Type=\"String\">#{column}</Data></Cell>" }
+          columns.each { |column| output << "<Cell><Data ss:Type=\"String\">#{self.class.human_attribute_name(column)}</Data></Cell>" }
           output << "</Row>"
         end    
 

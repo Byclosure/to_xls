@@ -1,0 +1,18 @@
+sqlite3:
+  adapter: sqlite3
+  database: to_xls.sqlite3.db
+sqlite3mem:
+  adapter: sqlite3
+  database: ":memory:"
+postgresql:
+  adapter: postgresql
+  username: postgres
+  password: postgres
+  database: to_xls_test
+  min_messages: ERROR
+mysql:
+  adapter: mysql
+  host: localhost
+  username: root
+  password:
+  database: to_xls_test
