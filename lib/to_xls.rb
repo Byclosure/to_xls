@@ -4,8 +4,8 @@ class Array
     output = '<?xml version="1.0" encoding="UTF-8"?><Workbook xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40" xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office"><Worksheet ss:Name="Sheet1"><Table>'
     
     if self.any?
-    
-      attributes = self.first.attributes.keys.map { |c| c.to_sym }
+      instance = self.first
+      attributes = instance.attributes.keys.map { |c| c.to_sym }
       
       if options[:only]
         # the "& attributes" get rid of invalid columns
@@ -19,7 +19,7 @@ class Array
       if columns.any?
         unless options[:headers] == false
           output << "<Row>"
-          columns.each { |column| output << "<Cell><Data ss:Type=\"String\">#{self.class.human_attribute_name(column)}</Data></Cell>" }
+          columns.each { |column| output << "<Cell><Data ss:Type=\"String\">#{instance.class.human_attribute_name(column)}</Data></Cell>" }
           output << "</Row>"
         end    
 
