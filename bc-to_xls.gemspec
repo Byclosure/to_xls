@@ -5,22 +5,28 @@
 
 Gem::Specification.new do |s|
   s.name = %q{bc-to_xls}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jo\303\243o Jesus", "Vasco Andrade e Silva"]
-  s.date = %q{2010-02-12}
+  s.date = %q{2010-02-14}
   s.description = %q{to_xls from http://github.com/arydjmal/to_xls with i18n support}
   s.email = %q{info@byclosure.com}
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
   s.files = [
-    "MIT-LICENSE",
+    ".gitignore",
+     "MIT-LICENSE",
      "README.rdoc",
+     "Rakefile",
      "VERSION",
+     "bc-to_xls.gemspec",
      "lib/to_xls.rb",
      "rails/init.rb",
+     "test/db/database.yml",
+     "test/db/schema.rb",
+     "test/test_helper.rb",
      "test/to_xls_test.rb",
      "test/user_model.rb"
   ]
@@ -30,7 +36,9 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{to_xls from http://github.com/arydjmal/to_xls with i18n support}
   s.test_files = [
-    "test/test_helper.rb",
+    "test/db/database.yml",
+     "test/db/schema.rb",
+     "test/test_helper.rb",
      "test/to_xls_test.rb",
      "test/user_model.rb"
   ]
