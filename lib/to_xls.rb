@@ -5,13 +5,13 @@ class Array
     
     if self.any?
       instance = self.first
-      attributes = instance.attributes.keys.map { |c| c.to_sym }
+      attributes = instance.attributes.keys.sort.map { |c| c.to_sym }
       
       if options[:only]
         # the "& attributes" get rid of invalid columns
         columns = Array(options[:only]) & attributes
       else
-        columns = attributes - options[:except].to_a
+        columns = attributes - Array(options[:except])
       end
 
       columns += options[:methods].to_a
@@ -19,13 +19,18 @@ class Array
       if columns.any?
         unless options[:headers] == false
           output << "<Row>"
-          columns.each { |column| output << "<Cell><Data ss:Type=\"String\">#{instance.class.human_attribute_name(column)}</Data></Cell>" }
+          columns.each do |column|
+            output << "<Cell><Data ss:Type=\"String\">#{instance.class.human_attribute_name(column)}</Data></Cell>"
+          end
           output << "</Row>"
         end    
 
         self.each do |item|
           output << "<Row>"
-          columns.each { |column| output << "<Cell><Data ss:Type=\"#{item.send(column).kind_of?(Integer) ? 'Number' : 'String'}\">#{item.send(column)}</Data></Cell>" }
+          columns.each do |column|
+            value = item.send(column)
+            output << "<Cell><Data ss:Type=\"#{value.kind_of?(Integer) ? 'Number' : 'String'}\">#{value}</Data></Cell>"
+          end
           output << "</Row>"
         end
       end
